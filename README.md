@@ -1,82 +1,10 @@
 # Protein Sequence Analyzer
 
-A comprehensive, pure-Python bioinformatics web application built with Streamlit. This tool provides deep computational analysis, physicochemical property calculation, and local sequence alignment for protein sequences.
-
-## 🧬 Features
-
-### 1. Physicochemical Analysis
-- **Molecular Weight Calculation:** Accurately computes the molecular weight of the protein sequence, adjusting for water loss during peptide bond formation.
-- **Isoelectric Point (pI) & Charge Curve:** Calculates the pI and plots the net charge of the protein across the standard pH range (0 to 14) using empirical pKa values.
-- **GRAVY Score:** Calculates the Grand Average of Hydropathy using the strict Kyte-Doolittle (`kd`) scale.
-- **Instability Index:** Evaluates sequence stability based on the Guruprasad et al. (1990) DIWV (Dipeptide Instability Weight Value) 400-item pairwise matrix.
-- **Aliphatic Index:** Computes the relative volume occupied by aliphatic side chains (Alanine, Valine, Isoleucine, and Leucine).
-
-### 2. Sequence Visualization & Motifs
-- **Hydrophobicity Plot:** Generates a sliding-window (default window size 9) hydrophobicity chart along the sequence length.
-- **Motif Detection:** Scans the sequence for conserved biological motifs using regular expressions (e.g., N-glycosylation sites, Casein kinase II phosphorylation sites).
-- **Secondary Structure Prediction:** Provides a heuristic prediction for local secondary structures (Alpha Helix, Beta Sheet, or Coil) across the sequence.
-
-### 3. Local Sequence Alignment
-- **Smith-Waterman Algorithm:** Performs local sequence alignment with strict **Affine Gap Penalties**, using 3 independent dynamic programming tracking matrices (H, E, and F).
-- **BLOSUM62 Matrix:** Evaluates amino acid substitutions utilizing the standard BLOSUM62 scoring matrix.
-- **Sequence Pre-processing:** Automatically strips FASTA headers (`>...`) and whitespace to deliver clean alignments.
-
-## 🏗️ Project Architecture
-
-The codebase is logically partitioned to separate UI, data, and mathematical logic:
-
-* **`app.py`**: The Streamlit user interface. Responsible for rendering inputs, managing state, and visualizing plots/data charts.
-* **`pipeline.py`**: The middle tier. Handles validation, FASTA string stripping, error processing, and routes commands between the UI and computation core.
-* **`core.py`**: The computation engine. Contains the raw mathematical algorithms (Smith-Waterman backtracking, pH iterators, sequence window aggregation).
-* **`data.py`**: The biological data repository. Houses structural definitions like `AMINO_ACID_DATA` (weights, pKa, Kyte-Doolittle scaling), the `BLOSUM62` matrix, and the massive 20x20 `DIWV` instability index matrix.
-
-## 🚀 Setup and Installation
-
-### Prerequisites
-- Python 3.9+ (Works flawlessly on macOS / Python 3.14 via lazy bounds mapping).
-
-### Installation Instructions
-
-1. **Clone the repository / navigate to the folder:**
-   ```bash
-   cd /Users/soumikray/Documents/Protein
-   ```
-
-2. **Create and activate a virtual environment:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-3. **Install the dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-   *(Note: The requirements utilize `>=` bounds to accommodate modern Python environments and ensure `pandas`, `numpy`, `matplotlib`, and `streamlit` build safely).*
-
-## 💻 Running the Application
-
-To launch the web interface locally, ensure your virtual environment is activated and run:
-
-```bash
-streamlit run app.py
-```
-
-Streamlit will boot up a local server and give you a `localhost` URL (usually `http://localhost:8501`) that automatically opens in your web browser.
-
-## 📝 Recent Technical Milestones
-
-- **Strict Scaling:** Removed arbitrary biological scalar metrics in favor of pure scientific standards (e.g., exclusively utilizing the Kyte-Doolittle hydropathy scale).
-- **Corrected Traceback Matrix:** Advanced DP states within Smith-Waterman natively trace accurate `align_len` offsets without double-counting gap extensions.
-- **Data Encapsulation:** Decoupled `DIWV` matrices entirely from the execution codebase to keep operational files lightweight and clean.
-
-# Protein Sequence Analyzer
-
-A modular, pure-Python bioinformatics web application built with Streamlit. This tool performs rigorous computational analysis, physicochemical characterization, and local sequence alignment for protein sequences.
+A modular, pure-Python bioinformatics web application built with Streamlit. It performs rigorous physicochemical analysis, sequence characterization, and local alignment for protein sequences with scientifically grounded methods.
 
 ---
 
-## 🧬 Features
+## Features
 
 ### 1. Physicochemical Analysis
 - **Molecular Weight:** Correctly computed with peptide bond correction (water loss).
@@ -110,7 +38,7 @@ A modular, pure-Python bioinformatics web application built with Streamlit. This
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 The application follows a clean, modular pipeline design:
 
@@ -126,7 +54,7 @@ Input → Validation → Core Computation → Pipeline → UI Rendering
 
 ---
 
-## ⚙️ Input Handling
+## Input Handling
 
 - Accepts raw sequences or FASTA format
 - Automatically strips headers (`>...`) and whitespace
@@ -152,7 +80,7 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ Run the App
+## Run the App
 
 ```bash
 streamlit run app.py
@@ -162,7 +90,7 @@ Open: http://localhost:8501
 
 ---
 
-## 📊 Output
+## Output
 
 The tool provides:
 - Numerical metrics (MW, pI, GRAVY, instability, aliphatic index)
@@ -172,7 +100,7 @@ The tool provides:
 
 ---
 
-## ⚠️ Limitations
+## Limitations
 
 - Secondary structure prediction is heuristic (not Chou–Fasman or ML-based)
 - No 3D structure modeling
@@ -180,7 +108,7 @@ The tool provides:
 
 ---
 
-## 🧠 Future Improvements
+## Future Improvements
 
 - Full Chou–Fasman or ML-based secondary structure prediction
 - FASTA multi-sequence support
@@ -190,6 +118,10 @@ The tool provides:
 
 ---
 
-## 🧾 License
+## License
 
 For academic and educational use.
+
+Developed by **Soumik Ray**  
+B.Tech Biotechnology (Computational Biology)  
+Sharda University
