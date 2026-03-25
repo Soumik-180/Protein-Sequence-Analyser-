@@ -4,6 +4,13 @@ A modular, pure-Python bioinformatics web application built with Streamlit. It p
 
 ---
 
+## 🔗 Live Demo
+
+Access the deployed application here:  
+https://protein-sequence-analyser.streamlit.app/
+
+---
+
 ## Features
 
 ### 1. Physicochemical Analysis
