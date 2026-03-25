@@ -6,7 +6,7 @@ from core import smith_waterman
 
 st.set_page_config(page_title="Protein Sequence Analyzer", page_icon="🧬", layout="wide")
 
-st.title("🧬 Protein Sequence Analyzer")
+st.title("Protein Sequence Analyzer")
 st.write("A pure Python bioinformatics pipeline. Scientifically accurate algorithms.")
 
 with st.sidebar:
@@ -14,7 +14,7 @@ with st.sidebar:
     mode = st.radio("Select Mode", ["Sequence Analysis", "Sequence Alignment"])
 
 if mode == "Sequence Analysis":
-    st.subheader("📝 Input Sequence")
+    st.subheader("Input Sequence")
     raw_seq = st.text_area("Enter protein sequence (raw or multi-FASTA)", height=150, 
                            help="Only the first sequence will be analyzed from multi-FASTA inputs.")
 
