@@ -87,7 +87,7 @@ if mode == "Sequence Analysis":
                             st.write(f"- **Coil:** {coil:.1f}%")
 
 elif mode == "Sequence Alignment":
-    st.subheader("🧬 Smith-Waterman Local Alignment")
+    st.subheader("Smith-Waterman Local Alignment")
     seq1 = st.text_area("Sequence 1 (raw or FASTA)")
     seq2 = st.text_area("Sequence 2 (raw or FASTA)")
     
