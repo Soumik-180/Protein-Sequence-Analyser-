@@ -1,15 +1,16 @@
-from core import (
-    calculate_molecular_weight,
-    calculate_composition,
-    compute_charge_curve,
-    calculate_pi,
-    calculate_gravy,
-    calculate_instability_index,
-    calculate_aliphatic_index,
-    calculate_hydrophobicity,
-    detect_motifs,
-    simple_secondary_structure_prediction
-)
+from logic.protein_sequence_analyzer.molecular_weight import calculate_molecular_weight
+from logic.protein_sequence_analyzer.composition import calculate_composition
+from logic.protein_sequence_analyzer.charge_curve import compute_charge_curve
+from logic.protein_sequence_analyzer.isoelectric_point import calculate_pi
+from logic.protein_sequence_analyzer.gravy import calculate_gravy
+from logic.protein_sequence_analyzer.instability import calculate_instability_index
+from logic.protein_sequence_analyzer.aliphatic_index import calculate_aliphatic_index
+from logic.protein_sequence_analyzer.hydrophobicity import calculate_hydrophobicity
+from logic.protein_sequence_analyzer.motifs import detect_motifs
+from logic.protein_sequence_analyzer.secondary_structure import simple_secondary_structure_prediction
+
+from logic.amino_acid_explorer.normalize import normalize_amino_acid_query
+from logic.amino_acid_explorer.report import build_amino_acid_report
 
 def format_sequence(raw_input):
     lines = raw_input.strip().splitlines()
@@ -50,3 +51,14 @@ def run_analysis(seq):
         "secondary_structure": simple_secondary_structure_prediction(clean_seq),
         "motifs": detect_motifs(clean_seq)
     }
+
+
+def run_amino_acid_explorer(query: str):
+    code, error = normalize_amino_acid_query(query)
+    if error:
+        return {"error": error}
+
+    try:
+        return build_amino_acid_report(code)
+    except Exception:
+        return {"error": "Failed to build amino acid report."}

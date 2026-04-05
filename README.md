@@ -45,19 +45,61 @@ https://protein-sequence-analyser.streamlit.app/
 
 ---
 
+### 4. Amino Acid Explorer
+- **Single Amino Acid Lookup:** Accepts 1-letter, 3-letter, or full name
+- **Chemical Reference:** Formula (with subscripts) + 2D structure image (from `structure/`)
+- **Genetics:** RNA codons table
+- **BLOSUM62 Explorer:** Interactive substitution score comparison
+
+---
+
 ## Architecture
 
 The application follows a clean, modular pipeline design:
 
 ```
-Input → Validation → Core Computation → Pipeline → UI Rendering
+Input → Parsing/Validation (pipeline) → Computation (logic + data) → Results → UI Rendering
 ```
 
 ### Components:
 - **`app.py`** → Streamlit UI layer
 - **`pipeline.py`** → Input validation, FASTA parsing, orchestration
-- **`core.py`** → Scientific computation (alignment, pI, hydrophobicity, etc.)
-- **`data.py`** → Static biological datasets (AA properties, BLOSUM62, DIWV)
+- **`logic/`** → Scientific computation modules (alignment, pI, hydrophobicity, etc.)
+- **`data/`** → Static biological datasets (AA properties, BLOSUM62, DIWV)
+
+### Module Map
+
+**`logic/protein_sequence_analyzer/`** (one file per calculation)
+- `molecular_weight.py` → `calculate_molecular_weight`
+- `composition.py` → `calculate_composition`
+- `charge_model.py` → `charge_at_ph` (shared)
+- `charge_curve.py` → `compute_charge_curve`
+- `isoelectric_point.py` → `calculate_pi`
+- `gravy.py` → `calculate_gravy`
+- `instability.py` → `calculate_instability_index`
+- `aliphatic_index.py` → `calculate_aliphatic_index`
+- `hydrophobicity.py` → `calculate_hydrophobicity`
+- `motifs.py` → `detect_motifs`
+- `secondary_structure.py` → `simple_secondary_structure_prediction`
+- `smith_waterman.py` → `smith_waterman`
+
+**`logic/amino_acid_explorer/`** (one file per helper)
+- `normalize.py` → `normalize_amino_acid_query`
+- `report.py` → `build_amino_acid_report`
+- `blosum62.py` → `get_blosum62_row`, `get_blosum62_score`
+
+**`data/protein_sequence_analyzer/`** (datasets)
+- `amino_acids.py` → `AMINO_ACID_DATA`
+- `blosum62.py` → `BLOSUM62`
+- `diwv.py` → `DIWV`
+
+**`data/amino_acid_explorer/`** (offline reference tables)
+- `chemical.py` → `AMINO_ACID_FORMULAS`
+- `structure_images.py` → `AMINO_ACID_STRUCTURE_IMAGES`
+- `genetics.py` → `AA_TO_CODONS_RNA`
+
+**`data/`**
+- `__init__.py` re-exports `AMINO_ACID_DATA`, `BLOSUM62`, `DIWV`
 
 ---
 

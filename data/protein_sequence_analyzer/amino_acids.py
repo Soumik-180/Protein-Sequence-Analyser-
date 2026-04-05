@@ -1,0 +1,22 @@
+AMINO_ACID_DATA = {
+    'A': {'name': 'Alanine', 'three': 'Ala', 'mw': 71.03711, 'category': 'hydrophobic', 'kd': 1.8},
+    'R': {'name': 'Arginine', 'three': 'Arg', 'mw': 156.10111, 'category': 'positive', 'kd': -4.5, 'pKa': 12.48},
+    'N': {'name': 'Asparagine', 'three': 'Asn', 'mw': 114.04293, 'category': 'polar', 'kd': -3.5},
+    'D': {'name': 'Aspartate', 'three': 'Asp', 'mw': 115.02694, 'category': 'negative', 'kd': -3.5, 'pKa': 3.87},
+    'C': {'name': 'Cysteine', 'three': 'Cys', 'mw': 103.00919, 'category': 'special', 'kd': 2.5, 'pKa': 8.36},
+    'Q': {'name': 'Glutamine', 'three': 'Gln', 'mw': 128.05858, 'category': 'polar', 'kd': -3.5},
+    'E': {'name': 'Glutamate', 'three': 'Glu', 'mw': 129.04259, 'category': 'negative', 'kd': -3.5, 'pKa': 4.25},
+    'G': {'name': 'Glycine', 'three': 'Gly', 'mw': 57.02146, 'category': 'special', 'kd': -0.4},
+    'H': {'name': 'Histidine', 'three': 'His', 'mw': 137.05891, 'category': 'positive', 'kd': -3.2, 'pKa': 6.04},
+    'I': {'name': 'Isoleucine', 'three': 'Ile', 'mw': 113.08406, 'category': 'hydrophobic', 'kd': 4.5},
+    'L': {'name': 'Leucine', 'three': 'Leu', 'mw': 113.08406, 'category': 'hydrophobic', 'kd': 3.8},
+    'K': {'name': 'Lysine', 'three': 'Lys', 'mw': 128.09496, 'category': 'positive', 'kd': -3.9, 'pKa': 10.45},
+    'M': {'name': 'Methionine', 'three': 'Met', 'mw': 131.04049, 'category': 'hydrophobic', 'kd': 1.9},
+    'F': {'name': 'Phenylalanine', 'three': 'Phe', 'mw': 147.06841, 'category': 'hydrophobic', 'kd': 2.8},
+    'P': {'name': 'Proline', 'three': 'Pro', 'mw': 97.05276, 'category': 'special', 'kd': -1.6},
+    'S': {'name': 'Serine', 'three': 'Ser', 'mw': 87.03203, 'category': 'polar', 'kd': -0.8},
+    'T': {'name': 'Threonine', 'three': 'Thr', 'mw': 101.04768, 'category': 'polar', 'kd': -0.7},
+    'W': {'name': 'Tryptophan', 'three': 'Trp', 'mw': 186.07931, 'category': 'hydrophobic', 'kd': -0.9},
+    'Y': {'name': 'Tyrosine', 'three': 'Tyr', 'mw': 163.06333, 'category': 'hydrophobic', 'kd': -1.3, 'pKa': 10.46},
+    'V': {'name': 'Valine', 'three': 'Val', 'mw': 99.06841, 'category': 'hydrophobic', 'kd': 4.2}
+}

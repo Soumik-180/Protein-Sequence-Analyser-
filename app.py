@@ -1,8 +1,21 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from pipeline import run_analysis, format_sequence
-from core import smith_waterman
+from pathlib import Path
+from pipeline import run_analysis, format_sequence, run_amino_acid_explorer
+from logic.protein_sequence_analyzer.smith_waterman import smith_waterman
+
+
+_SUBSCRIPT_TRANSLATION = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+
+
+def format_chemical_formula(formula: str) -> str:
+    if formula is None:
+        return ""
+    return str(formula).translate(_SUBSCRIPT_TRANSLATION)
+
+
+_STRUCTURE_DIR = Path(__file__).parent / "structure"
 
 st.set_page_config(page_title="Protein Sequence Analyzer", page_icon="🧬", layout="wide")
 
@@ -11,7 +24,7 @@ st.write("A pure Python bioinformatics pipeline. Scientifically accurate algorit
 
 with st.sidebar:
     st.header("Tools")
-    mode = st.radio("Select Mode", ["Sequence Analysis", "Sequence Alignment"])
+    mode = st.radio("Select Mode", ["Sequence Analysis", "Sequence Alignment", "Amino Acid Explorer"])
 
 if mode == "Sequence Analysis":
     st.subheader("Input Sequence")
@@ -41,7 +54,7 @@ if mode == "Sequence Analysis":
                         st.subheader("Amino Acid Composition")
                         df_comp = pd.DataFrame(list(results['composition'].items()), columns=['AA', 'Percentage (%)'])
                         df_comp = df_comp.sort_values(by='Percentage (%)', ascending=False).reset_index(drop=True)
-                        st.dataframe(df_comp, use_container_width=True)
+                        st.dataframe(df_comp, width="stretch")
                     
                     with c2:
                         st.subheader("Charge vs pH Curve")
@@ -118,3 +131,106 @@ elif mode == "Sequence Alignment":
                 st.text(f"Seq1: {alignment['aligned_seq1']}\n      {match_str}\nSeq2: {alignment['aligned_seq2']}")
             else:
                 st.write("No positive-scoring alignment path found.")
+
+elif mode == "Amino Acid Explorer":
+    st.subheader("Amino Acid Explorer")
+    st.write("Look up a single amino acid (1-letter, 3-letter, or full name).")
+
+    if "aa_explorer_query" not in st.session_state:
+        st.session_state.aa_explorer_query = ""
+    if "aa_explorer_report" not in st.session_state:
+        st.session_state.aa_explorer_report = None
+
+    query = st.text_input(
+        "Amino acid",
+        value=st.session_state.aa_explorer_query,
+        placeholder="e.g., A, Ala, Alanine",
+    )
+
+    if st.button("Explore Amino Acid"):
+        st.session_state.aa_explorer_query = query
+        st.session_state.aa_explorer_report = run_amino_acid_explorer(query)
+
+    report = st.session_state.aa_explorer_report
+    if report:
+        if "error" in report:
+            st.error(report["error"])
+        else:
+            code = report.get("one_letter")
+            three = report.get("three_letter") or "N/A"
+            name = report.get("name") or "N/A"
+
+            st.success(f"{name} ({three}, {code})")
+
+            st.markdown("### Identity")
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("1-letter", code)
+            col2.metric("3-letter", three)
+            col3.metric("Category", report.get("category") or "N/A")
+            col4.metric("Name", name)
+
+            st.markdown("### Physicochemical Properties")
+            col1, col2, col3 = st.columns(3)
+            mw = report.get("molecular_weight")
+            kd = report.get("hydropathy_kd")
+            pka = report.get("pKa")
+            col1.metric("Molecular Weight", f"{mw:.5g} Da" if isinstance(mw, (int, float)) else "N/A")
+            col2.metric("Hydropathy (KD)", f"{kd:.3g}" if isinstance(kd, (int, float)) else "N/A")
+            col3.metric("Side-chain pKa", f"{pka:.3g}" if isinstance(pka, (int, float)) else "N/A")
+
+            st.markdown("### Chemical Formula")
+            formula = report.get("formula")
+            st.write(format_chemical_formula(formula) if formula else "N/A")
+
+            st.markdown("### Structure")
+            structure_image = report.get("structure_image")
+            if not structure_image:
+                st.write("N/A")
+            else:
+                img_path = _STRUCTURE_DIR / str(structure_image)
+                if img_path.exists():
+                    st.image(str(img_path), width="stretch")
+                else:
+                    st.write("N/A")
+
+            st.markdown("### Genetics (RNA Codons)")
+            codons = report.get("codons_rna") or []
+            st.write(", ".join(codons) if codons else "N/A")
+
+            st.markdown("### BLOSUM62 Substitution Scores")
+            row = report.get("blosum62_row") or {}
+            if not row:
+                st.write("BLOSUM62 row not available.")
+            else:
+                compare_options = [aa for aa in sorted(row.keys()) if aa != code]
+                compare_widget_key = f"aa_explorer_compare_{code}"
+                compare = st.selectbox(
+                    "Compare substitution score vs",
+                    compare_options,
+                    key=compare_widget_key,
+                )
+                score = row.get(compare)
+                st.write(f"BLOSUM62 score for {code} → {compare}: **{score}**")
+
+                df_blosum = pd.DataFrame(
+                    sorted(row.items(), key=lambda kv: kv[1], reverse=True),
+                    columns=["AA", "BLOSUM62 Score"],
+                )
+                st.dataframe(df_blosum, width="stretch")
+
+            st.markdown("### Highest / Lowest Substitutions")
+            if row:
+                ranked = [(aa, s) for aa, s in row.items() if aa != code]
+                ranked.sort(key=lambda kv: kv[1], reverse=True)
+                top = ranked[:5]
+                bottom = ranked[-5:]
+                st.write("Top 5: " + ", ".join([f"{aa} ({s})" for aa, s in top]))
+                st.write("Bottom 5: " + ", ".join([f"{aa} ({s})" for aa, s in bottom]))
+            else:
+                st.write("N/A")
+
+            st.markdown("### Notes")
+            st.write(
+                "- Structures are shown as reference images from the local `structure/` folder.\n"
+                "- This explorer uses a small offline reference table for educational use."
+            )
